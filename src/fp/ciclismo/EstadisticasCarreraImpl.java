@@ -147,6 +147,8 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 				.min(Comparator.comparing(Ganador::kmRecorridos))
 				.map(Ganador::kmRecorridos)
 				.orElse(0); //Optional<Ganador>
+//		        .orElseThrow(IllegalArgumentException::new);
+//				.orElseThrow(()->new IllegalArgumentException("Km no encontrados"));
 	 } 
 
 	
@@ -180,6 +182,7 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 	}
 	return res;
   }
+//	List<String> getGanadoresConRecorridoInferiorA(Integer km):
 
 	public Map<String, List<Ganador>> getGanadoresPorNacionalidad() {
 		//TODO

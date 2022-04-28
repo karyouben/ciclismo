@@ -43,7 +43,7 @@ public class ExperimentosComparator {
         
         Comparator<Ganador> c5 = Comparator.comparing(Ganador::kmRecorridos);
         Ganador g  = Collections.max(ganadores,c5);
-        mostrarGanadores2(g);
+        System.out.println(g);
 	}
 
 	private static void mostrarGanadores(Collection<Ganador> ganadores) {
@@ -51,13 +51,10 @@ public class ExperimentosComparator {
 			System.out.println(g);
 		}
 	}
-		private static void mostrarGanadores2(Ganador g2) {
-			for(Ganador g: g2) {
-				System.out.println(g);
-			}
+
 		
 
 		
-	}
+	
 
 }
