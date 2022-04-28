@@ -84,8 +84,8 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 	 * @see fp.ciclismo.EstadisticasTour#hanGanadoTodosAlgunaEtapa()
 	 */
 	public Boolean hanGanadoTodosAlgunaEtapa(){
-		//TODO
-		return null;		
+		return ganadores.stream()
+				.allMatch(ganador ->ganador.numEtapasGanadas()>0);		
 	}
 	
 	/* (non-Javadoc)
@@ -143,18 +143,43 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 	 * @see fp.ciclismo.EstadisticasTour#getDistanciaMenor()
 	 */
 	public Integer getKmMenorRecorrido() {
-		//TODO
-		return null;
+		return ganadores.stream() //Stream<Ganador>
+				.min(Comparator.comparing(Ganador::kmRecorridos))
+				.map(Ganador::kmRecorridos)
+				.orElse(0); //Optional<Ganador>
 	 } 
 
 	
 	/* (non-Javadoc)
 	 * @see fp.ciclismo.EstadisticasTour#getGanadorMasRapido()
 	 */
-	public String getGanadorMasRapido() {
-		//TODO
-		return null;
+	public String getGanadorMasRapido2() {
+		Ganador g= ganadores.stream()
+				.max(Comparator.comparing(Ganador::getVelocidadMedia))
+				.orElse(null);
+		String res= null;
+		if(g!= null) {
+			res=g.nombre();
+		}
+		return res;
 	}
+	
+	public String getGanadorMasRapido3() {
+		return ganadores.stream()
+				.max(Comparator.comparing(Ganador::getVelocidadMedia))
+				.map(Ganador::nombre)
+				.orElse(null);
+	}
+	
+	public String getGanadorMasRapido() {
+	Optional<Ganador> opt= ganadores.stream() //stream <Ganador>
+			.max(Comparator.comparing(Ganador::getVelocidadMedia));
+	String res= null;
+	if(opt.isPresent()) {
+		res = opt.get().nombre();
+	}
+	return res;
+  }
 
 	public Map<String, List<Ganador>> getGanadoresPorNacionalidad() {
 		//TODO

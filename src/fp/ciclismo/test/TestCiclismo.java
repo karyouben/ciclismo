@@ -13,7 +13,7 @@ public class TestCiclismo {
 	public static void main(String[] args) {
 	  
 		//EstadisticasCarrera est = FactoriaCiclismo.creaEstadisticas2006_16();
-		EstadisticasCarrera est = FactoriaCiclismo.creaEstadisticasDeFichero("Tour Francia","resources/ganadores.txt");
+		EstadisticasCarrera est = FactoriaCiclismo.creaEstadisticasDeFichero("Tour Francia","./data/ganadores.txt");
 		mostrarEstadisticas(est);
 
 	}
