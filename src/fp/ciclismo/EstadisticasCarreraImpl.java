@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -76,8 +77,10 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 	 */
 	
 	public Long getNumeroGanadores() {
-		//TODO
-		return null;
+		return ganadores.stream()
+				.map(Ganador::nombre) //stream<String>
+		        .distinct() //stream<String> sin repetir
+		        .count(); //long
 	}
 
 	/* (non-Javadoc)
@@ -108,17 +111,20 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 	 * @see fp.ciclismo.EstadisticasTour#buscarGanador(java.lang.String)
 	 */
 	public Ganador buscaGanador(String nombre) {
-		//TODO		
-		return null;
+		return ganadores.stream() //stream<Ganador>
+				.filter(g->g.nombre().equals(nombre)) // stream<Ganador>(filtrado por el nombre buscado)
+				.findFirst() //optional <Ganador>
+				.orElse(null);
 	}
 
 	/* (non-Javadoc)
 	 * @see fp.ciclismo.EstadisticasTour#buscaGanador(java.lang.Integer)
 	 */
 	public Ganador buscaGanador(Integer anyo) {
-		
-		//TODO		
-		return null;
+		return ganadores.stream() //stream<Ganador>
+				.filter(g->g.anyo().equals(anyo)) // stream<Ganador>(filtrado por el nombre buscado)
+				.findFirst() //optional <Ganador> //.findAny()
+				.orElse(null);
 	}
 
 	/* (non-Javadoc)
@@ -126,8 +132,18 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 	 */
 	@Override
 	public Integer calculaDistanciaTotal() {
-		//TODO
-		return null;
+		return ganadores.stream() //stream<Ganador>
+				.map(Ganador::kmRecorridos) //stream<Integer>
+				//.reduce(0, (x,y)->x+y); //Elemento neutro, bynaryOperator
+				.reduce(0, Integer::sum);
+	}
+	
+	public Integer calculaDistanciaTotal_2() {
+		//Stream especializados en tipos básicos
+		return ganadores.stream() //stream<Ganador>
+				.mapToInt(Ganador::kmRecorridos) //stream<Integer>
+				//.reduce(0, (x,y)->x+y); //Elemento neutro, bynaryOperator
+				.sum();
 	}
 
 
@@ -135,9 +151,11 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 
 	@Override
 	public Double getMediaEtapasGanadas(String equipo) {
-	
-		//TODO
-		return null;
+		return ganadores.stream() //stream<Ganador>
+				.filter(ganador->ganador.equipo().equals(equipo))
+				.mapToInt(Ganador::numEtapasGanadas) //stream<Integer> o IntStream
+				.average()
+				.orElse(0.0); //optionalDouble
 	}
 	/* (non-Javadoc)
 	 * @see fp.ciclismo.EstadisticasTour#getDistanciaMenor()
@@ -185,26 +203,29 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 //	List<String> getGanadoresConRecorridoInferiorA(Integer km):
 
 	public Map<String, List<Ganador>> getGanadoresPorNacionalidad() {
-		//TODO
-		return null;
+		return ganadores.stream() //Stream<Ganador>
+			   .collect(Collectors.groupingBy(Ganador::nacionalidad)); //funcion claves
 	}
 
 	public Map<String, Set<Ganador>> getGanadoresPorNacionalidad_ejemplo2() {
-		//TODO
-		return null;
+		return ganadores.stream() //Stream<Ganador>
+			   .collect(Collectors.groupingBy(Ganador::nacionalidad,
+				Collectors.toSet())); //funcion claves
 	}
 	
 	public Map<String, SortedSet<Ganador>> getGanadoresPorNacionalidad_ejemplo3() {
-		//TODO
-		return null;
+		return ganadores.stream() //Stream<Ganador>
+				   .collect(Collectors.groupingBy(Ganador::nacionalidad,
+					Collectors.toCollection(TreeSet::new))); //funcion claves
 	}
 	
 	/* (non-Javadoc)
 	 * @see fp.ciclismo.EstadisticasCarrera#cuentaGanadoresPorNacionalidad()
 	 */
 	public Map<String, Long> cuentaGanadoresPorNacionalidad() {
-		//TODO
-		return null;
+		return ganadores.stream() //Stream<Ganador>
+				   .collect(Collectors.groupingBy(Ganador::nacionalidad, //funcion claves
+					Collectors.counting()));  //summingInt averagingInt maxBy(c)-->optional
 
 	}
 
@@ -212,13 +233,15 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 	 * @see fp.ciclismo.EstadisticasCarrera#getTotalEtapasGanadasPorEquipo()
 	 */
 	public Map<String, Integer> getTotalEtapasGanadasPorEquipo(){
-		//TODO
-		return null;
+		return ganadores.stream() //Stream<Ganador>
+				   .collect(Collectors.groupingBy(Ganador::equipo, //Función para las claves
+					Collectors.summingInt(Ganador::numEtapasGanadas)));
 	}
 
 	public Map<String, Double> getMediaEtapasGanadasPorEquipo(){
-		//TODO
-		return null;
+		return ganadores.stream() //Stream<Ganador>
+				   .collect(Collectors.groupingBy(Ganador::equipo, //Función para las claves
+					Collectors.averagingInt(Ganador::numEtapasGanadas)));
 	}
 	
 	@Override

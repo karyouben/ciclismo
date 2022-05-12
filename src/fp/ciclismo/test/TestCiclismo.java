@@ -80,8 +80,11 @@ public class TestCiclismo {
 	}
 
 	private static <K,T> void mostrarMapPorLinea(Map<K, T> map) {
-		map.entrySet().stream()
-			.forEach(entry-> System.out.println(entry.getKey()+"-->"+entry.getValue()));
+		if(map!=null) {
+			map.entrySet().stream()
+			.forEach(entry-> System.out.println(entry.getKey()+"-->"+entry.getValue()));	
+		}
+		
 		
 	}
 
