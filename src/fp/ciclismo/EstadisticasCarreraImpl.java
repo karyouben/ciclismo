@@ -246,20 +246,66 @@ public class EstadisticasCarreraImpl implements EstadisticasCarrera {
 	
 	@Override
 	public Map<String, Integer> cuentaCarrerasGanadasPorCiclista() {
-		
-		//TODO
-		return null;
+		return ganadores.stream()
+				.collect(Collectors.groupingBy(Ganador::nombre,
+						Collectors.collectingAndThen(Collectors.counting(), Long::intValue)));
 	}
 	/* (non-Javadoc)
 	 * @see fp.ciclismo.EstadisticasCarrera#guardaGanadoresNacionalidadConAnyos(java.lang.String, java.lang.String)
 	 */
 	public void guardaGanadoresNacionalidadConAnyos(String nombreFichero, String nacionalidad) {
-		//TODO
+		Map<String,List<Integer>> m=
+				ganadores.stream()
+				.filter(g->g.nacionalidad().equals(nacionalidad))
+				.collect(Collectors.groupingBy(Ganador::nombre,//funcion claves
+						Collectors.mapping(//función antes de guardar en el map
+								Ganador::anyo,// agrupar por anyo
+								Collectors.toList()))); //agrupa en una lista
+		Ficheros.escribeFichero("Error escribiendo en archivo", m, nombreFichero);
 	}
 	
 
+@Override
+public Map<String, List<Ganador>> getMasDiasMaillotPorNacionalidad(Integer n) {
+	Map<String, List<Ganador>> mAux = getGanadoresPorNacionalidad();
+	return mAux.entrySet().stream()
+			.collect(Collectors.toMap(Map.Entry::getKey,//1. Funcion para obtener las claves
+					entry->obtenerNMasDias(entry.getValue(),n)));                                 //2. Funcion para obtener el valor
+	
+}
+	private List<Ganador> obtenerNMasDias(List<Ganador> lisGanadores, Integer n) {
+		Comparator<Ganador> c= Comparator.comparing(Ganador::numDiasMaillotAmarillo).reversed();
+		return lisGanadores.stream()
+				.sorted(c) //Stream<Ganador> ordenado
+				.limit(n)
+				.collect(Collectors.toList());
+}
+@Override
+	public Map<String, Ganador> ganadorMasDiasMaillotPorEquipo() {
+	Comparator<Ganador> c= Comparator.comparing(Ganador::numDiasMaillotAmarillo);
+	return ganadores.stream()
+			.collect(Collectors.toMap(
+					Ganador::equipo,//funcion para las claves
+					ganador->ganador,//Function.identity())
+					//Operador binario, para determinar que se
+					//hace con los valores de las claves duplicadas
+					BinaryOperator.maxBy(c)
+					));
+	}
+    public Map<String, Ganador> ganadorMasDiasMaillotPorEquipo2() {
+    Comparator<Ganador> c= Comparator.comparing(Ganador::numDiasMaillotAmarillo);
+    return ganadores.stream()
+    		.collect(Collectors.groupingBy(Ganador::equipo,
+    				Collectors.collectingAndThen(Collectors.maxBy(c),
+    					opt->opt.get()	)));//funcion para transformar tras recolectar
+    //Optional::get
+
+}
+
+
+
+
 	public Map<String, Ganador> ganadorMasDiasMaillotPorNacionalidad() {
-		//TODO
 		return null;
 	}
 	

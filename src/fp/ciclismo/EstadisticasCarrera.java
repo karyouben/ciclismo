@@ -134,5 +134,19 @@ public interface EstadisticasCarrera {
 	 * @param anyoFinal Año final del intervalo. No se incluye en el resultado.
 	 */
 	void guardaGanadoresDeAnyosOrdenados(String nombreFichero, Integer anyoInicial, Integer anyoFinal);
+	 
+	/**
+	 * @param n Entero que representa el numero de elementos de la listas que son el valor de map
+	 * @return Un map en el que las claves son las nacionalidades y los valores son las listas con los n
+	 *  ganadores que hayan llegado mas dias en mallot
+	 */
 	
+	Map<String,List<Ganador>> getMasDiasMaillotPorNacionalidad(Integer n);
+	
+	/**
+	 * @param Un map en el que las claves son los nombres de los equipos y los valores representa al ganador
+	 *  que mas dias llevo el maillot amarillo en la carrera que gano de ese equipot
+	 */
+	
+	Map<String,Ganador> ganadorMasDiasMaillotPorEquipo();
 }
