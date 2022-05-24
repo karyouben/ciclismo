@@ -149,4 +149,9 @@ public interface EstadisticasCarrera {
 	 */
 	
 	Map<String,Ganador> ganadorMasDiasMaillotPorEquipo();
+	
+	/**
+	 * @return Una lista ordenada de ganadores
+	 */
+	List<String> getNacionalidadesGanadores();
 }

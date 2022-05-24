@@ -12,6 +12,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import fp.utiles.Checkers;
@@ -326,5 +327,24 @@ public Map<String, List<Ganador>> getMasDiasMaillotPorNacionalidad(Integer n) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public List<String> getNacionalidadesGanadores() {
+		return ganadores.stream()
+				.map(Ganador::nacionalidad)
+				.distinct()
+				.sorted()
+		//		.collect(Collectors.toList());
+				.toList();
+	}
+	
+	public List<String> getCiclistasTop(Integer n) {
+		// Comparator<Ganador> c = Comparator.comparing(Ganador::numEtapasGanadas).reversed()
+		return ganadores.stream()
+				.sorted(Comparator.comparing(Ganador::numEtapasGanadas).reversed())
+				.limit(n)
+				.map(Ganador::nombre)
+				.collect(Collectors.toList());
+	}
+	
+	
 	
 }
